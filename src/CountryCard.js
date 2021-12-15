@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useTheme } from "./ThemeContext";
 import { Link } from "react-router-dom";
 
 const CountryCard = ({ country }) => {
+  //Formating numbers from 1000000 to 1,000,000
   let populationNumber = country.population
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -45,6 +46,10 @@ const CountryCardContainer = styled.div`
   width: 20rem;
   border-radius: 0.2rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  @media only screen and (max-width: 330px) {
+    width: 16rem;
+    height: 23rem;
+  }
 
   &:hover {
     cursor: pointer;

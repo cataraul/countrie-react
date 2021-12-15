@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,18 +11,24 @@ const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
 
   //Function handler for filtering out arrays when user searchs for a particular country
   const filterCountriesHandler = (e) => {
+    e.preventDefault();
     if (!e.target.value) {
       setCountriesCoppy([...countries]);
     } else {
       setCountriesCoppy(
-        countries.filter((country) => {
-          if (
-            country.name.toLowerCase().includes(e.target.value.toLowerCase())
-          ) {
-            console.log(country);
-            return true;
-          }
-        })
+        countries.filter((country) =>
+          country.name.toLowerCase().includes(e.target.value.toLowerCase())
+        )
+      );
+    }
+  };
+  //Select Region and display countries from that region
+  const handleChange = (e) => {
+    if (!e.target.value) {
+      setCountriesCoppy([...countries]);
+    } else {
+      setCountriesCoppy(
+        countries.filter((country) => country.region === e.target.value)
       );
     }
   };
@@ -41,8 +47,8 @@ const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
           }`}
         />
         <input
-          onChange={(e) => filterCountriesHandler(e)}
           type="text"
+          onChange={(e) => filterCountriesHandler(e)}
           placeholder="Search for a country..."
           className={
             darkTheme ? "dark-theme-class-lighter" : "light-theme-class"
@@ -50,12 +56,13 @@ const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
         />
       </InputDiv>
       <select
+        onChange={(e) => handleChange(e)}
         id="select-region"
         className={darkTheme ? "dark-theme-class-lighter" : "light-theme-class"}
       >
         <option value="">Filter by Region</option>
         <option value="Africa">Africa</option>
-        <option value="America">America</option>
+        <option value="Americas">America</option>
         <option value="Asia">Asia</option>
         <option value="Europe">Europe</option>
         <option value="Oceania">Oceania</option>
@@ -75,6 +82,8 @@ const InputContainer = styled.div`
     display:flex;
     align-items:center;
     justify-content:space-between;
+    
+    }
 
     select{
       width:12rem;
@@ -102,6 +111,18 @@ const InputDiv = styled.div`
   width: 26rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 0.4rem;
+  @media only screen and (max-width: 430px) {
+    width: 20rem;
+    input {
+      width: 12rem;
+    }
+  }
+  @media only screen and (max-width: 330px) {
+    width: 16rem;
+    input {
+      width: 9rem;
+    }
+  }
   input {
     height: 3rem;
     width: 18rem;
@@ -109,6 +130,7 @@ const InputDiv = styled.div`
     border-top-right-radius: 0.4rem;
     border-bottom-right-radius: 0.4rem;
     padding-left: 1rem;
+
     &:focus {
       outline: none;
     }
