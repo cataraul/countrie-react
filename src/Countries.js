@@ -7,6 +7,8 @@ import { useTheme, useCountriesData } from "./ThemeContext";
 
 const Countries = () => {
   const { countries, setCountries } = useCountriesData();
+  const [countriesCoppy, setCountriesCoppy] = useState([]);
+
   useEffect(() => {
     getAllCountries();
   }, []);
@@ -15,18 +17,23 @@ const Countries = () => {
     let response = await fetch("https://restcountries.com/v2/all");
     let data = await response.json();
     setCountries(() => [...data]);
+    setCountriesCoppy(() => [...data]);
+    console.log(countriesCoppy);
   };
   const darkTheme = useTheme();
 
   return (
     <>
-      <SearchParams />
+      <SearchParams
+        countriesCoppy={countriesCoppy}
+        setCountriesCoppy={setCountriesCoppy}
+      />
 
       <CountriesContainer
         className={darkTheme ? "dark-theme-class" : "light-theme-class"}
       >
-        {countries.length > 0 &&
-          countries.map((country) => {
+        {countriesCoppy.length > 0 &&
+          countriesCoppy.map((country) => {
             return <CountryCard country={country} key={country.numericCode} />;
           })}
       </CountriesContainer>

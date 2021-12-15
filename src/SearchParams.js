@@ -1,12 +1,31 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme, useCountriesData } from "./ThemeContext";
 
-const SearchParams = () => {
+const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
+  //Getting the theme from the context
   const darkTheme = useTheme();
-  const { countries, setCountries } = useCountriesData();
+  const { countries } = useCountriesData();
+
+  //Function handler for filtering out arrays when user searchs for a particular country
+  const filterCountriesHandler = (e) => {
+    if (!e.target.value) {
+      setCountriesCoppy([...countries]);
+    } else {
+      setCountriesCoppy(
+        countries.filter((country) => {
+          if (
+            country.name.toLowerCase().includes(e.target.value.toLowerCase())
+          ) {
+            console.log(country);
+            return true;
+          }
+        })
+      );
+    }
+  };
 
   return (
     <InputContainer
@@ -22,6 +41,7 @@ const SearchParams = () => {
           }`}
         />
         <input
+          onChange={(e) => filterCountriesHandler(e)}
           type="text"
           placeholder="Search for a country..."
           className={
