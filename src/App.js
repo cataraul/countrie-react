@@ -1,16 +1,21 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import Countries from "./Countries";
-import SearchParams from "./SearchParams";
-import { ThemeProvider } from "./ThemeContext";
+import { DataProvider } from "./ThemeContext";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Details from "./Details";
 
 function App() {
   return (
-    <ThemeProvider>
-      <Navbar />
-      <SearchParams />
-      <Countries />
-    </ThemeProvider>
+    <Router>
+      <DataProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Countries />} />
+          <Route path="/details/:id" element={<Details />} />
+        </Routes>
+      </DataProvider>
+    </Router>
   );
 }
 

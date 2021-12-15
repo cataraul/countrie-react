@@ -1,36 +1,40 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { useTheme } from "./ThemeContext";
+import { Link } from "react-router-dom";
 
 const CountryCard = ({ country }) => {
   let populationNumber = country.population
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  let id = country.name;
   const darkTheme = useTheme();
 
   return (
-    <CountryCardContainer
-      className={darkTheme ? "dark-theme-class-lighter" : "light-theme-class"}
-    >
-      <CardImageContainer
-        style={{ backgroundImage: `url(${country.flags.svg})` }}
-      ></CardImageContainer>
-      <CountryDescription>
-        <h2>{country.name}</h2>
-        <p>
-          <span>Population:</span>
-          {populationNumber}
-        </p>
-        <p>
-          <span>Region:</span>
-          {country.region}
-        </p>
-        <p>
-          <span>Capital:</span>
-          {country.capital}
-        </p>
-      </CountryDescription>
-    </CountryCardContainer>
+    <Link to={`/details/${id}`} style={{ textDecoration: "none" }}>
+      <CountryCardContainer
+        className={darkTheme ? "dark-theme-class-lighter" : "light-theme-class"}
+      >
+        <CardImageContainer
+          style={{ backgroundImage: `url(${country.flags.svg})` }}
+        ></CardImageContainer>
+        <CountryDescription>
+          <h2>{country.name}</h2>
+          <p>
+            <span>Population:</span>
+            {populationNumber}
+          </p>
+          <p>
+            <span>Region:</span>
+            {country.region}
+          </p>
+          <p>
+            <span>Capital:</span>
+            {country.capital}
+          </p>
+        </CountryDescription>
+      </CountryCardContainer>
+    </Link>
   );
 };
 
@@ -41,6 +45,11 @@ const CountryCardContainer = styled.div`
   width: 20rem;
   border-radius: 0.2rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+  }
 `;
 const CardImageContainer = styled.div`
   width: 100%;

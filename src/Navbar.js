@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import moon from "./assets/moon.png";
 import { faMoon } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme, useThemeUpdate } from "./ThemeContext";
@@ -14,7 +13,7 @@ const Navbar = () => {
       className={darkTheme ? "dark-theme-class-lighter" : "light-theme-class"}
     >
       <div>
-        <h1>Where in the world?</h1>
+        <h2>Where in the world?</h2>
         <button
           onClick={() => toggleTheme()}
           className={darkTheme ? "dark-theme-class" : "light-theme-class"}
@@ -31,7 +30,7 @@ export default Navbar;
 
 const NavBar = styled.nav`
   position: relative;
-  height: 5rem;
+  height: 10vh;
   width: 100%;
   box-shadow: 0px 12px 15px -15px hsl(0, 0%, 0%);
   z-index: 2;

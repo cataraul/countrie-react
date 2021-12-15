@@ -2,10 +2,11 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTheme } from "./ThemeContext";
+import { useTheme, useCountriesData } from "./ThemeContext";
 
 const SearchParams = () => {
   const darkTheme = useTheme();
+  const { countries, setCountries } = useCountriesData();
 
   return (
     <InputContainer
@@ -68,6 +69,10 @@ const InputContainer = styled.div`
        
         
       }
+    }
+    @media only screen and (max-width:680px){
+      flex-direction:column;
+      gap:2rem;
     }
 `;
 const InputDiv = styled.div`

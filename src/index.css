@@ -16,14 +16,17 @@ body {
   color: hsl(0, 0%, 52%);
 }
 .dark-theme-class-lighter {
+  transition: all 0.3s ease;
   color: hsl(0, 0%, 100%);
   background: hsl(209, 23%, 22%);
 }
 .dark-theme-class {
+  transition: all 0.3s ease;
   color: hsl(0, 0%, 100%);
   background: hsl(207, 26%, 17%);
 }
 .light-theme-class {
+  transition: all 0.3s ease;
   color: hsl(200, 15%, 8%);
   background: hsl(0, 0%, 98%);
 }

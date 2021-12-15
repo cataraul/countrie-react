@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import SearchParams from "./SearchParams";
 import { motion } from "framer-motion";
 import CountryCard from "./CountryCard";
-import { useTheme } from "./ThemeContext";
+import { useTheme, useCountriesData } from "./ThemeContext";
 
 const Countries = () => {
-  const [countries, setCountries] = useState([]);
+  const { countries, setCountries } = useCountriesData();
   useEffect(() => {
     getAllCountries();
   }, []);
@@ -18,14 +19,18 @@ const Countries = () => {
   const darkTheme = useTheme();
 
   return (
-    <CountriesContainer
-      className={darkTheme ? "dark-theme-class" : "light-theme-class"}
-    >
-      {countries.length > 0 &&
-        countries.map((country) => {
-          return <CountryCard country={country} key={country.numericCode} />;
-        })}
-    </CountriesContainer>
+    <>
+      <SearchParams />
+
+      <CountriesContainer
+        className={darkTheme ? "dark-theme-class" : "light-theme-class"}
+      >
+        {countries.length > 0 &&
+          countries.map((country) => {
+            return <CountryCard country={country} key={country.numericCode} />;
+          })}
+      </CountriesContainer>
+    </>
   );
 };
 
@@ -39,4 +44,7 @@ const CountriesContainer = styled(motion.section)`
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
+  @media only screen and (max-width: 1135px) {
+    justify-content: space-around;
+  }
 `;
