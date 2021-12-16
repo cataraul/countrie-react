@@ -1,5 +1,5 @@
 import { DataProvider } from "./ThemeContext";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./Navbar";
 import Countries from "./Countries";
@@ -7,21 +7,22 @@ import Details from "./Details";
 import ButtonUp from "./ButtonUp";
 
 function App() {
+  const location = useLocation();
   return (
     <Router>
       <DataProvider>
         <AnimatePresence>
           <Navbar key="navbar" />
-          <Routes>
+          <Routes location={location} key={location.key}>
             <Route
               exact
-              path="/"
+              path="/countries/"
               element={<Countries />}
               key="countries-container"
             />
             <Route
               exact
-              path="/details/:id"
+              path="/countries/details/:id/"
               element={<Details />}
               key="details-container"
             />
