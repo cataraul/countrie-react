@@ -55,7 +55,7 @@ const Details = () => {
           className={darkTheme ? "dark-theme-class" : "light-theme-class"}
         >
           <ButtonContainer>
-            <Link to="/">
+            <Link to="/countries/">
               <button
                 className={
                   darkTheme ? "dark-theme-class-lighter" : "light-theme-class"
