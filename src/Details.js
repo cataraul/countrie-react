@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from "./ThemeContext";
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
@@ -14,6 +14,7 @@ const Details = () => {
   const [countryData, setCountryData] = useState([]);
   const darkTheme = useTheme();
   const [isLoading, setLoading] = useState(true);
+  let navigate = useNavigate();
 
   //fething data from api
   useEffect(() => {
@@ -31,6 +32,17 @@ const Details = () => {
     }
     setLoading((loading) => !loading);
   };
+
+  const checkNeighbour = async (country) => {
+    let response = await fetch(
+      `https://restcountries.com/v2/alpha?codes=${country}`
+    );
+    console.log(country);
+    let data = await response.json();
+    setCountryData(() => [...data]);
+    navigate(`/details/${country}`);
+  };
+
   if (isLoading) {
     return (
       <div
@@ -110,7 +122,14 @@ const Details = () => {
                 <p>Border Countries:</p>
                 {countryData[0].borders ? (
                   countryData[0].borders.map((border) => {
-                    return <li key={border}>{border}</li>;
+                    return (
+                      <CountryBorder
+                        onClick={() => checkNeighbour(border)}
+                        key={border}
+                      >
+                        <Link to={`/details/${border}`}>{border}</Link>
+                      </CountryBorder>
+                    );
                   })
                 ) : (
                   <p>This country has no borders.</p>
@@ -223,4 +242,18 @@ const Span = styled.span`
   font-weight: 600;
   margin: 0.2rem 0;
   text-decoration: underline;
+`;
+
+const CountryBorder = styled.button`
+  padding: 0.2rem 1rem;
+  margin: 0 0.2rem;
+  border: 1px solid hsl(0, 0%, 52%);
+  border-radius: 0.4rem;
+  background-color: none;
+  a {
+    text-decoration: none;
+  }
+  &:hover {
+    cursor: pointer;
+  }
 `;

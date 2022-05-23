@@ -1,13 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTheme, useCountriesData } from "./ThemeContext";
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
   //Getting the theme from the context
   const darkTheme = useTheme();
   const { countries } = useCountriesData();
+  const [populationNumber, setPopulationNumber] = useState(0);
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedRegions, setSelectedRegions] = useState([]);
+
+  useEffect(() => {
+    if (countriesCoppy.length === 0) {
+      setCountriesCoppy([...countries]);
+    }
+  }, [selectedCountries, selectedRegions, countriesCoppy]);
 
   //Function handler for filtering out arrays when user searchs for a particular country
   const filterCountriesHandler = (e) => {
@@ -27,10 +38,44 @@ const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
     if (!e.target.value) {
       setCountriesCoppy([...countries]);
     } else {
-      setCountriesCoppy(
-        countries.filter((country) => country.region === e.target.value)
-      );
+      fetchData(e.target.value);
     }
+  };
+
+  //Filter by population number
+  const populationFilter = (e) => {
+    setCountriesCoppy(
+      countries.filter((country) => country.population < e.target.value)
+    );
+    let population = e.target.value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    setPopulationNumber(population);
+  };
+
+  const fetchData = async (region) => {
+    if (selectedRegions.includes(region)) {
+      return false;
+    } else {
+      let response = await fetch(
+        `https://restcountries.com/v2/region/${region}`
+      );
+      let data = await response.json();
+      setCountriesCoppy(() => [...selectedCountries, ...data]);
+      setSelectedCountries(() => [...selectedCountries, ...data]);
+      setSelectedRegions(() => [...selectedRegions, region]);
+    }
+  };
+
+  const deleteFilter = (e) => {
+    setCountriesCoppy(
+      countriesCoppy.filter(
+        (country) => country.region !== e.target.textContent
+      )
+    );
+    setSelectedRegions(
+      selectedRegions.filter((region) => region !== e.target.textContent)
+    );
   };
 
   return (
@@ -55,18 +100,63 @@ const SearchParams = ({ countriesCoppy, setCountriesCoppy }) => {
           }
         />
       </InputDiv>
-      <select
-        onChange={(e) => handleChange(e)}
-        id="select-region"
-        className={darkTheme ? "dark-theme-class-lighter" : "light-theme-class"}
-      >
-        <option value="">Filter by Region</option>
-        <option value="Africa">Africa</option>
-        <option value="Americas">America</option>
-        <option value="Asia">Asia</option>
-        <option value="Europe">Europe</option>
-        <option value="Oceania">Oceania</option>
-      </select>
+      <div onClick={(e) => deleteFilter(e)}>
+        {selectedRegions.length > 0
+          ? selectedRegions.map((region) => {
+              return (
+                <SelectedRegionButton
+                  key={uuidv4()}
+                  className={
+                    darkTheme ? "dark-theme-class-lighter" : "light-theme-class"
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={faWindowClose}
+                    className={`close-icon ${
+                      darkTheme
+                        ? "dark-theme-class-lighter"
+                        : "light-theme-class"
+                    }`}
+                  />
+                  {region}
+                </SelectedRegionButton>
+              );
+            })
+          : ""}
+      </div>
+      <FilterContainer>
+        <div>
+          <p>Filter by population number:</p>
+          <input
+            type="range"
+            name="population"
+            id="population-range"
+            min="500"
+            max="1402112000"
+            onMouseUp={(e) => populationFilter(e)}
+          />
+          <p>{populationNumber}</p>
+        </div>
+
+        <p></p>
+        <select
+          onChange={(e) => {
+            handleChange(e);
+            setSelectedCountries([...selectedCountries, e.target.value]);
+          }}
+          id="select-region"
+          className={
+            darkTheme ? "dark-theme-class-lighter" : "light-theme-class"
+          }
+        >
+          <option value="">Filter by Region</option>
+          <option value="Africa">Africa</option>
+          <option value="Americas">America</option>
+          <option value="Asia">Asia</option>
+          <option value="Europe">Europe</option>
+          <option value="Oceania">Oceania</option>
+        </select>
+      </FilterContainer>
     </InputContainer>
   );
 };
@@ -82,9 +172,6 @@ const InputContainer = styled.div`
     display:flex;
     align-items:center;
     justify-content:space-between;
-    
-    }
-
     select{
       width:12rem;
       height:3rem;
@@ -93,10 +180,6 @@ const InputContainer = styled.div`
       font-size:1rem;
       &:hover{
         cursor:pointer;
-      }
-      option{
-       
-        
       }
     }
     @media only screen and (max-width:680px){
@@ -134,5 +217,26 @@ const InputDiv = styled.div`
     &:focus {
       outline: none;
     }
+  }
+`;
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 30%;
+  div {
+    padding: 0 2rem;
+    input {
+      width: 18rem;
+    }
+  }
+`;
+
+const SelectedRegionButton = styled.button`
+  padding: 0.2rem 1rem;
+  margin: 0 0.2rem;
+  border: 1px solid hsl(0, 0%, 52%);
+  border-radius: 0.4rem;
+  &:hover {
+    cursor: pointer;
   }
 `;

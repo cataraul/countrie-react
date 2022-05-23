@@ -15,6 +15,11 @@ body {
   background: #fefefe;
   color: hsl(0, 0%, 52%);
 }
+.close-icon {
+  background: #fefefe;
+  color: hsl(0, 0%, 52%);
+  margin: 0 0.5rem;
+}
 .dark-theme-class-lighter {
   transition: all 0.3s ease;
   color: hsl(0, 0%, 100%);

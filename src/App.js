@@ -19,7 +19,6 @@ function App() {
             exact
             path="/countries/"
             element={<Countries />}
-            key="countries-container"
           />
           <Route
             exact
